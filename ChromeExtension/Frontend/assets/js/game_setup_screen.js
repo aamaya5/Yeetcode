@@ -50,7 +50,7 @@ function attachScrollListener(pickerElement) {
 
 // Wait for the DOM content to load
 document.addEventListener('DOMContentLoaded', () => {
-  const BACKEND_API = "https://yeetcode-81k4.onrender.com";
+  const BACKEND_API = "https://yeetcode-udx5.onrender.com";
   const socket = new WebSocket("wss://yeetcode-81k4.onrender.com/ws");
   
   // Log WebSocket connection status for debugging
@@ -142,7 +142,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const gameId = localStorage.getItem("gameId");
         const player1 = localStorage.getItem("player1");
         // Update game status and settings on the backend
-        await fetch(`https://yeetcode-81k4.onrender.com/api/games/${gameId}/status`, {
+        await fetch(`https://yeetcode-udx5.onrender.com/api/games/${gameId}/status`, {
           method: "PATCH",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({

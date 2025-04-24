@@ -5,7 +5,7 @@ document.addEventListener("DOMContentLoaded", () => {
     localStorage.setItem("isPlayer2Api", "true");
     
     // Initialize backend and WebSocket connection
-    const BACKEND_API = "https://yeetcode-81k4.onrender.com";
+    const BACKEND_API = "https://yeetcode-udx5.onrender.com";
     const socket = new WebSocket("wss://yeetcode-81k4.onrender.com/ws");
     
     // Log WebSocket connection status for debugging
@@ -28,7 +28,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         console.log("This is the invite code:", invCode);
 
-        fetch("https://yeetcode-81k4.onrender.com/api/games/join", {
+        fetch("https://yeetcode-udx5.onrender.com/api/games/join", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ invitation_code: invCode, username: player2Name })

@@ -124,7 +124,7 @@ async function initializeGameTable(socket) {
 
 // Initialize game when page loads
 document.addEventListener('DOMContentLoaded', () => {
-    const BACKEND_API = "https://yeetcode-81k4.onrender.com";
+    const BACKEND_API = "https://yeetcode-udx5.onrender.com";
     const socket = new WebSocket("wss://yeetcode-81k4.onrender.com/ws");
     
     // Log WebSocket connection status for debugging
