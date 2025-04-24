@@ -44,11 +44,12 @@ wss.on("connection", (ws) => {
       const gameId = data.gameId;
       const isPlayer1Api = data.isPlayer1Api;
 
+      console.log("THIS IS PARSED MESSAGE, ", data);
+
       if(!clients[gameId]) {
         clients[gameId] = {};
       }
 
-      console.log("THIS IS MESSAGE", type, " AND THIS IS ", isPlayer1Api, )
 
     //game_created accepted_join_game player1_name  PLAYER2_JOINED GAME_STARTED  problems_sent
     if(isPlayer1Api === 'true') {
@@ -82,7 +83,7 @@ wss.on("connection", (ws) => {
       sendToPlayers(gameId, data, "player2");
     }
     
-    if(type === "updateUI_send_1_rebound") {
+    if(type === "updateUI_send_1") {
       sendToPlayers(gameId, data, "player1");
     }
 

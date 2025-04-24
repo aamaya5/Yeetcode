@@ -20,7 +20,7 @@ function findSubmitButtonAndAddListener() {
         console.log("Yeetcode Content Script: Click listener ATTACHED to submit button.");
         return true;
     } else {
-        console.log("Yeetcode Content Script: Submit button NOT FOUND yet using selector:", SUBMIT_BUTTON_SELECTOR);
+        console.log("Yeetcode Content Script: Submit button NOT FOUND yet using selector:");
         return false; 
     }
 }

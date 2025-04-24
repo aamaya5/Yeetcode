@@ -153,13 +153,13 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    //Listen for UI updates
+    //Listen for UI updates from player 2
     socket.onmessage = (event) => {
         const data = JSON.parse(event.data);
-        if(data.type === "updateUI_send_1_rebound") {
+        if(data.type === "updateUI_send_1") {
             localStorage.setItem("problemMapPlayer2", JSON.stringify(data.problemMapPlayer2));
             chrome.runtime.sendMessage({
-                action: "updateUI_send_1_rebound_2", 
+                action: "updateUI_send_1_rebound_1", 
             });
         }
     }   
@@ -167,7 +167,6 @@ document.addEventListener('DOMContentLoaded', () => {
     //Send UI updates
     chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         if(request.action === "updateUI_send_2_rebound") {
-            console.log("WE GOT HERE MESSAGE Sent")
             let socketPayload = {
                 type: "updateUI_send_2_rebound",
                 isPlayer1Api: localStorage.getItem("isPlayer1Api"),

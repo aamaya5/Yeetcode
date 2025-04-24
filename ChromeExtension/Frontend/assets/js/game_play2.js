@@ -65,9 +65,8 @@ function updateUI(problemList, problemMapPlayer1, problemMapPlayer2) {
     const n = problemList.length;
 
     console.log(problemList);
-    console.log(`Printing out map2 bruge: ${problemMapPlayer2}`);
 
-    if(problemMapPlayer1.length > 0){
+    if(Object.keys(problemMapPlayer1).length > 0) {
         const parsedObj = JSON.parse(problemMapPlayer1); // now it's a plain object
         const mapPlayer1 = new Map(Object.entries(parsedObj)); // now it's a Map
         problemMapPlayer1 = mapPlayer1;
@@ -118,43 +117,46 @@ function updateUI(problemList, problemMapPlayer1, problemMapPlayer2) {
 
     let checkForWinner = 0;
     //console.log(`brig: ${problemMapPlayer1}`);
-    for (var index=0; index<n; index++) {
-        const slug = String(problemList[index]);
-        let status = problemMapPlayer2[slug];
 
-        console.log(`${slug} ---> ${status}`);
+    if(Object.keys(problemMapPlayer2).length > 0){
+        for (var index=0; index<n; index++) {
+            const slug = String(problemList[index]);
+            let status = problemMapPlayer2[slug];
 
-        const boxId = `player2Box${index+1}`;
-        const box = document.getElementById(boxId);
-        //console.log(`Here is the box: ${box}; for problem ${slug}, here is the status: ${status}`);
+            console.log(`${slug} ---> ${status}`);
 
-        if(box && status) {
-            if(status === "Accepted") {
-                box.textContent = "🟢";                    
-                checkForWinner++;
+            const boxId = `player2Box${index+1}`;
+            const box = document.getElementById(boxId);
+            //console.log(`Here is the box: ${box}; for problem ${slug}, here is the status: ${status}`);
 
-                if(!(yellowBoxes2.has(boxId))) {
-                    yellowBoxes2.add(boxId);
-                    score[1]++;
-                    document.getElementById("player2-score").innerText = score[1];
-                    
-                    // Check if player 2 won by completing all problems
-                    if (score[1] >= n) {
-                        console.log("PLAYER 2 won by completing all problems!");
-                        // Set player 1 as loser for the animation
-                        localStorage.setItem("loserName", player1Name);
-                        // Redirect to game over page
-                        setTimeout(() => {
-                            window.location.href = gameOverPage;
-                        }, 100);
-                        return;
+            if(box && status) {
+                if(status === "Accepted") {
+                    box.textContent = "🟢";                    
+                    checkForWinner++;
+
+                    if(!(yellowBoxes2.has(boxId))) {
+                        yellowBoxes2.add(boxId);
+                        score[1]++;
+                        document.getElementById("player2-score").innerText = score[1];
+                        
+                        // Check if player 2 won by completing all problems
+                        if (score[1] >= n) {
+                            console.log("PLAYER 2 won by completing all problems!");
+                            // Set player 1 as loser for the animation
+                            localStorage.setItem("loserName", player1Name);
+                            // Redirect to game over page
+                            setTimeout(() => {
+                                window.location.href = gameOverPage;
+                            }, 100);
+                            return;
+                        }
                     }
+
+                } else if(status === "in_progress") {
+
+                } else{
+                    box.textContent = "❌"
                 }
-
-            } else if(status === "in_progress") {
-
-            } else{
-                box.textContent = "❌"
             }
         }
     }
@@ -271,11 +273,11 @@ document.addEventListener('DOMContentLoaded', async () => {
             console.log(`Starting game with ${selectedProblemCount} problems`);
             await startTimer();
         }
+        
         if(data.type === "updateUI_send_2_rebound") {
+            //WE CAN UPDATE HERE, UI UPDATE FOR PLAYER 2 ENDS HERE.
             localStorage.setItem("problemMapPlayer1", JSON.stringify(data.problemMapPlayer1));
-            chrome.runtime.sendMessage({
-                action: "updateUI_send_2_rebound_2", 
-            });
+            updateUI(localStorage.getItem("selectedProblems"), localStorage.getItem("problemMapPlayer1"), {});
         }
     }
 
@@ -312,22 +314,12 @@ async function startTimer() {
         numMinutes = nextTime[0];
         numSeconds = nextTime[1];
         document.getElementById("timerText").innerText = timeFormated(numMinutes, numSeconds);
-
-        socket.onmessage = async (event) => {
-            const data = JSON.parse(event.data);
-            if(data.type === "updateUI_send_2_rebound") {
-                localStorage.setItem("problemMapPlayer1", JSON.stringify(data.problemMapPlayer1));
-                //console.log(`Here is mappp: ${localStorage.getItem("problemMapPlayer1")}`);
-                updateUI(localStorage.getItem("selectedProblems"), localStorage.getItem("problemMapPlayer1"), {});
-                chrome.runtime.sendMessage({
-                    action: "updateUI_send_2_rebound_2", 
-                });
-            }
-        }
-    
+        
+        //SEND PROBLEMS TO PLAYER 1
         chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
             if (message.action === "triggerUserSubmissionAPICall") {
                 console.log("Clicked on submit button");
+
                 if(problemList.length === 0) {
                     problemList = JSON.parse(localStorage.getItem("selectedProblems"))
                 }
@@ -337,16 +329,17 @@ async function startTimer() {
                         problemMapPlayer2[slug] = "in_progress";
                     }
                 }
+
                 let recentSubmissions = await userRecentSubmissions(player2, 1);
                 let title = titleToSlug(recentSubmissions[0].title);
                 let timestamp = recentSubmissions[0].timestamp;
                 let status = recentSubmissions[0].status;
                 problemMapPlayer2[title] = status;
                 updateUI(problemList, {}, problemMapPlayer2);
-                console.log("about to try out sending message to screen1 from player2 submit");
+
                 console.log(`P2 map yuuuu: ${problemMapPlayer2}`);
                 let socketPayload = {
-                    type: "updateUI_send_1_rebound",
+                    type: "updateUI_send_1",
                     problemMapPlayer2: problemMapPlayer2, 
                     isPlayer1Api: localStorage.getItem("isPlayer1Api"), 
                     isPlayer2Api: localStorage.getItem("isPlayer2Api"),
@@ -354,32 +347,9 @@ async function startTimer() {
                 };
                 socket.send(JSON.stringify(socketPayload));
             }
-    
-            if(message.action === "updateUI_send_1_rebound_3") {
-                if(problemList.length === 0) {
-                    problemList = JSON.parse(localStorage.getItem("selectedProblems"))
-                }
-    
-                let problemMapPlayer2 = JSON.parse(localStorage.getItem("problemMapPlayer2"))
-                updateUI(problemList, {}, problemMapPlayer2);
-                console.log("333about to try out sending message to screen1 from player2 submit");
-                console.log(`P3332 map yuuuu: ${localStorage.getItem("problemMapPlayer2")}`);
-            }
         });
 
-        chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-            if(request.action === "updateUI_send_1_rebound") {
-                let socketPayload = {
-                    type: "updateUI_send_1_rebound",
-                    problemMapPlayer2: JSON.parse(localStorage.getItem("problemMapPlayer2")), 
-                    isPlayer1Api: localStorage.getItem("isPlayer1Api"), 
-                    isPlayer2Api: localStorage.getItem("isPlayer2Api"),
-                    gameId: localStorage.getItem("gameId"),
-                };
-                
-                socket.send(JSON.stringify(socketPayload));
-            }
-        })
+
         
         if (numMinutes === 0 && numSeconds === 0) {
             // Time's up - determine winner

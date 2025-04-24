@@ -108,7 +108,6 @@ function updateUI(problemList, problemMapPlayer1, problemMapPlayer2) {
 
         localStorage.setItem("problemMapPlayer1", JSON.stringify(problemMapPlayer1));
 
-        console.log("We got to first send")
         chrome.runtime.sendMessage({
             action: "updateUI_send_2", 
         });
@@ -176,7 +175,6 @@ document.addEventListener("DOMContentLoaded", function () {
     numSeconds = nextTime[1];
 
     chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
-
         if (message.action === "triggerUserSubmissionAPICall") {
 
             console.log("Clicked on submit button");
@@ -199,7 +197,7 @@ document.addEventListener("DOMContentLoaded", function () {
             updateUI(problemList, problemMapPlayer1, {});
         }
 
-        if(message.action === "updateUI_send_1_rebound_3") {
+        if(message.action === "updateUI_send_1_rebound_2") {
             if(problemList.length === 0) {
                 problemList = JSON.parse(localStorage.getItem("selectedProblems"))
             }
@@ -247,15 +245,6 @@ var intervalTimer = setInterval(async function() {
             problemMapPlayer1[title] = status;
 
             updateUI(problemList, problemMapPlayer1, {});
-        }
-
-        if(message.action === "updateUI_send_1_rebound_3") {
-            if(problemList.length === 0) {
-                problemList = JSON.parse(localStorage.getItem("selectedProblems"))
-            }
-
-            let problemMapPlayer2 = JSON.parse(localStorage.getItem("problemMapPlayer2"))
-            updateUI(problemList, {}, problemMapPlayer2);
         }
     });
     
