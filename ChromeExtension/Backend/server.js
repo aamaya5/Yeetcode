@@ -87,7 +87,7 @@ wss.on("connection", (ws) => {
       sendToPlayers(gameId, data, "player1");
     }
 
-    if(type === "updateUI_send_2_rebound") {
+    if(type === "updateUI_send_2_rebound_2") {
       sendToPlayers(gameId, data, "player2");
     }
   });

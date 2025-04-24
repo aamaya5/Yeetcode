@@ -274,7 +274,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             await startTimer();
         }
         
-        if(data.type === "updateUI_send_2_rebound") {
+        if(data.type === "updateUI_send_2_rebound_2") {
             //WE CAN UPDATE HERE, UI UPDATE FOR PLAYER 2 ENDS HERE.
             localStorage.setItem("problemMapPlayer1", JSON.stringify(data.problemMapPlayer1));
             updateUI(localStorage.getItem("selectedProblems"), localStorage.getItem("problemMapPlayer1"), {});

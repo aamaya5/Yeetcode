@@ -168,7 +168,7 @@ document.addEventListener('DOMContentLoaded', () => {
     chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         if(request.action === "updateUI_send_2_rebound") {
             let socketPayload = {
-                type: "updateUI_send_2_rebound",
+                type: "updateUI_send_2_rebound_2",
                 isPlayer1Api: localStorage.getItem("isPlayer1Api"),
                 isPlayer2Api: localStorage.getItem("isPlayer2Api"),
                 problemMapPlayer1: JSON.parse(localStorage.getItem("problemMapPlayer1")), 
