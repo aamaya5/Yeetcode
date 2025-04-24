@@ -45,7 +45,6 @@ wss.on("connection", (ws) => {
       const isPlayer1Api = data.isPlayer1Api;
 
       console.log("THIS IS PARSED MESSAGE, ", data);
-
       if(!clients[gameId]) {
         clients[gameId] = {};
       }

@@ -281,20 +281,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     }
 
-    chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-        if(request.action === "updateUI_send_1_rebound") {
-            let socketPayload = {
-                type: "updateUI_send_1_rebound",
-                problemMapPlayer2: JSON.parse(localStorage.getItem("problemMapPlayer2")), 
-                isPlayer1Api: localStorage.getItem("isPlayer1Api"), 
-                isPlayer2Api: localStorage.getItem("isPlayer2Api"),
-                gameId: localStorage.getItem("gameId"),
-            };
-            
-            socket.send(JSON.stringify(socketPayload));
-        }
-    })
-
 });
 
 async function startTimer() {
