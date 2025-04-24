@@ -33,7 +33,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 })
 
 
-//SENDING UI UPDATES TO PLAYER @
+//SENDING UI UPDATES TO PLAYER 2
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     if(request.action === 'updateUI_send_2')
     chrome.runtime.sendMessage({action: "updateUI_send_2_rebound"})
